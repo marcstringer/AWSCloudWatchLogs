@@ -56,9 +56,7 @@ tags					| table				| No		| The key-value pairs to use for the tags
 const HTTP_RESPONSE_SUCCESS = 200;
 groupParams <- {
 	"logGroupName": "testLogGroup",
-	"tags": {
-      "Environment" : "test"
-   	}
+	"tags": { "Environment" : "test"}
 }
 logs.CreateLogGroup(groupParams, function(res) {
 
