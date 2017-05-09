@@ -6,3 +6,4 @@
 test*
 .imptest
 *.out.nut
+AWSRequestV4.class.nut
