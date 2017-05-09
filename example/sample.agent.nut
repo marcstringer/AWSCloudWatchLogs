@@ -1,19 +1,19 @@
 // MIT License
-//
+// 
 // Copyright 2017 Mystic Pants PTY LTD
-//
+// 
 // SPDX-License-Identifier: MIT
-//
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
@@ -42,21 +42,21 @@ logs <- AWSCloudWatchLogs(AWS_CLOUD_WATCH_LOGS_REGION, AWS_CLOUD_WATCH_LOGS_ACCE
 
 // Create Log Stream params
 params <- {
-	"logGroupName": "testLogGroup",
-	"logStreamName": "testLogStream"
+    "logGroupName": "testLogGroup",
+    "logStreamName": "testLogStream"
 }
 
 // Create log group params
 groupParams <- {
-	"logGroupName": "testLogGroup",
-	"tags": {
-      "Environment" : "test"
-   	}
+    "logGroupName": "testLogGroup",
+    "tags": {
+        "Environment": "test"
+    }
 }
 
 // Delete log group params
 deleteParams <- {
-	"logGroupName": "testLogGroup"
+    "logGroupName": "testLogGroup"
 }
 
 // run time code
@@ -64,31 +64,29 @@ deleteParams <- {
 // create a log group
 logs.CreateLogGroup(groupParams, function(res) {
 
-	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
-		server.log("Created a log group successfully");
-		// create a log stream
-		logs.CreateLogStream(params, function(res) {
+    if (res.statuscode == HTTP_RESPONSE_SUCCESS) {
+        server.log("Created a log group successfully");
+        // create a log stream
+        logs.CreateLogStream(params, function(res) {
 
-			if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
-				server.log("Created a log stream successfully");
-				// deletes a log group
-				logs.DeleteLogGroup(deleteParams, function(res) {
+            if (res.statuscode == HTTP_RESPONSE_SUCCESS) {
+                server.log("Created a log stream successfully");
+                // deletes a log group
+                logs.DeleteLogGroup(deleteParams, function(res) {
 
-					if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
-						server.log("Deleted log group successfully");
-					}
-					else {
-						server.log("Failed to delete log group. error: " + http.jsondecode(res.body).message)
-					}
-				});
-			}
-			else {
-				server.log("Failed to create log stream. error: " + http.jsondecode(res.body).message);
-			}
-		});
+                    if (res.statuscode == HTTP_RESPONSE_SUCCESS) {
+                        server.log("Deleted log group successfully");
+                    } else {
+                        server.log("Failed to delete log group. error: " + http.jsondecode(res.body).message)
+                    }
+                });
+            } else {
+                server.log("Failed to create log stream. error: " + http.jsondecode(res.body).message);
+            }
+        });
 
-	} else {
-		server.log("Failed to create log group. error: " + http.jsondecode(res.body).message);
-	}
+    } else {
+        server.log("Failed to create log group. error: " + http.jsondecode(res.body).message);
+    }
 
 });

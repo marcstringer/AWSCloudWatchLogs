@@ -3,7 +3,6 @@
 *.out
 .build_api_key.json
 *.swp
-test*
 .imptest
 *.out.nut
 AWSRequestV4.class.nut
