@@ -4,3 +4,5 @@
 .build_api_key.json
 *.swp
 test*
+.imptest
+*.out.nut
