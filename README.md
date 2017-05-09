@@ -1,6 +1,4 @@
-# AWSDynamoDB
-
-**This library is a work in progress and does not yet work.**
+# AWSCloudWatchLogs
 
 To add this library to your model, add the following lines to the top of your agent code:
 
@@ -11,7 +9,7 @@ To add this library to your model, add the following lines to the top of your ag
 
 **Note: [AWSRequestV4](https://github.com/electricimp/AWSRequestV4/) must be loaded.**
 
-This class can be used to perform actions on a DynamoDB table.
+This class can be used to perform Cloud Watch log actions.
 
 ## Class Methods
 
@@ -37,6 +35,44 @@ const AWS_CLOUD_WATCH_LOGS_REGION = "YOUR_REGION_HERE";
 logs <- AWSCloudWatchLogs(AWS_CLOUD_WATCH_LOGS_REGION, AWS_CLOUD_WATCH_LOGS_ACCESS_KEY_ID, AWS_CLOUD_WATCH_LOGS_SECRET_ACCESS_KEY);
 ```
 
+
+
+### CreateLogGroup(params, cb)
+Creates a log group with the specified name. For more detail please see: http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateLogGroup.html
+
+Parameter       	   |       Type     | Description
+---------------------- | -------------- | -----------
+**params** 			   | Table          | Table of parameters (See API Reference)
+**cb**                 | Function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter      	 	    |       Type	    | Required	| Description
+---------------------   | ----------------- | --------  | -----------
+logGroupName			| String			| Yes		| The name of the log group you are creating
+tags					| table				| No		| The key-value pairs to use for the tags
+
+```squirrel
+const HTTP_RESPONSE_SUCCESS = 200;
+groupParams <- {
+	"logGroupName": "testLogGroup",
+	"tags": {
+      "Environment" : "test"
+   	}
+}
+logs.CreateLogGroup(groupParams, function(res) {
+
+	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
+		server.log("Created a log group successfully");
+	}
+	else {
+		server.log("Failed to create log group. error: " + http.jsondecode(res.body).message);
+	}
+});
+```
+
+
+
 ### CreateLogStream(params, cb)
 Creates a log stream for the specified log group. For more detail please see: http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateLogStream.html
 
@@ -49,11 +85,89 @@ where `params` includes
 
 Parameter      	 	    |       Type	    | Required	| Description
 ---------------------   | ----------------- | --------  | -----------
-logGroupName			| String			| Yes		| The name of the log group
-logStreamName			| String			| Yes		| The name of the log stream
+logGroupName			| String			| Yes		| The name of the existing log group
+logStreamName			| String			| Yes		| The name of the log stream you are creating
 
 ```squirrel
+params <- {
+	"logGroupName": "testLogGroup",
+	"logStreamName": "testLogStream"
+}
+logs.CreateLogStream(params, function(res) {
+	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
+		server.log("Created a log stream successfully");
+	}
+	else {
+		server.log("Failed to create log stream. error: " + http.jsondecode(res.body).message);
+	}
+});
 ```
+
+
+
+### DeleteLogGroup(params, cb)
+Creates a log group with the specified name. For more detail please see: http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DeleteLogGroup.html
+
+Parameter       	   |       Type     | Description
+---------------------- | -------------- | -----------
+**params** 			   | Table          | Table of parameters (See API Reference)
+**cb**                 | Function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter      	 	    |       Type	    | Required	| Description
+---------------------   | ----------------- | --------  | -----------
+logGroupName			| String			| Yes		| The name of the log group you want to delete
+
+```squirrel
+deleteParams <- {
+	"logGroupName": "testLogGroup"
+}
+logs.DeleteLogGroup(deleteParams, function(res) {
+
+	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
+		server.log("Deleted log group successfully");
+	}
+	else {
+		server.log("Failed to delete log group. error: " + http.jsondecode(res.body).message)
+	}
+});
+
+```
+
+
+
+### DeleteLogStream(params, cb)
+Deletes the specified log stream and permanently deletes all the archived log events associated with the log stream. For more detail please see: http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DeleteLogStream.html
+
+Parameter       	   |       Type     | Description
+---------------------- | -------------- | -----------
+**params** 			   | Table          | Table of parameters (See API Reference)
+**cb**                 | Function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter      	 	    |       Type	    | Required	| Description
+---------------------   | ----------------- | --------  | -----------
+logGroupName			| String			| Yes		| The name of the log group
+logStreamName			| String			| Yes		| The name of the log stream you are deleting from the log group
+
+```squirrel
+params <- {
+	"logGroupName": "testLogGroup",
+	"logStreamName": "testLogStream"
+}
+logs.DeleteLogStream(deleteParams, function(res) {
+
+	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
+		server.log("Deleted log stream successfully");
+	}
+	else {
+		server.log("Failed to delete log stream. error: " + http.jsondecode(res.body).message)
+	}
+});
+```
+
 
 
 #### Response Table
@@ -70,10 +184,9 @@ where `headers` includes
 Key		              |       Type     | Description
 --------------------- | -------------- | -----------
 x-amzn-requestid	  | String		   | Amazon request id
-content-type		  | String		   | Content type e.g text/XML
+connection			  | String		   | Connection status
 date 				  | String		   | The date and time at which response was sent
 content-length		  | String		   | the length of the content
-x-amz-crc32			  | String		   | Checksum of the UTF-8 encoded bytes in the HTTP response
 
 
 

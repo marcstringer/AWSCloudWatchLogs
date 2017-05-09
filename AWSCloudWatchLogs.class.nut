@@ -45,13 +45,63 @@ class AWSCloudWatchLogs {
         }
     }
 
+
+
     //--------------------------------------------------------------------------
      // @param {table} params
      // @param {function} cb
     //--------------------------------------------------------------------------
     function CreateLogStream(params, cb) {
-        local headers = { "X-Amz-Target": format("%s.CreateLogStream", TARGET_PREFIX) };
+
+        local headers = {
+          "X-Amz-Target": format("%s.CreateLogStream", TARGET_PREFIX)
+          "Content-Type": "application/x-amz-json-1.1"
+        };
         _awsRequest.post("/", headers, http.jsonencode(params), cb);
     }
 
+
+
+	//--------------------------------------------------------------------------
+	 // @param {table} params
+	 // @param {function} cb
+	//--------------------------------------------------------------------------
+	function CreateLogGroup(params, cb) {
+
+        local headers = {
+          "X-Amz-Target": format("%s.CreateLogGroup", TARGET_PREFIX)
+          "Content-Type": "application/x-amz-json-1.1"
+        };
+		_awsRequest.post("/", headers, http.jsonencode(params), cb);
+	}
+
+
+
+    //--------------------------------------------------------------------------
+     // @param {table} params
+     // @param {function} cb
+    //--------------------------------------------------------------------------
+    function DeleteLogGroup(params, cb) {
+
+        local headers = {
+          "X-Amz-Target": format("%s.DeleteLogGroup", TARGET_PREFIX)
+          "Content-Type": "application/x-amz-json-1.1"
+        };
+        _awsRequest.post("/", headers, http.jsonencode(params), cb);
+    }
+
+
+
+    //--------------------------------------------------------------------------
+     // @param {table} params
+     // @param {function} cb
+    //--------------------------------------------------------------------------
+    function DeleteLogStream(params, cb) {
+
+        local headers = {
+          "X-Amz-Target": format("%s.DeleteLogStream", TARGET_PREFIX)
+          "Content-Type": "application/x-amz-json-1.1"
+        };
+        _awsRequest.post("/", headers, http.jsonencode(params), cb);
+    }
 }
