@@ -4,7 +4,7 @@ To add this library to your model, add the following lines to the top of your ag
 
 ```
 #require "AWSRequestV4.class.nut:1.0.2"
-#require "AWSCloudWatchLogs.class.nut:1.0.0"
+#require "AWSCloudWatchLogs.lib.nut:1.0.0"
 ```
 
 **Note: [AWSRequestV4](https://github.com/electricimp/AWSRequestV4/) must be loaded.**
@@ -26,7 +26,7 @@ Parameter    		   |       Type     | Description
 
 ```squirrel
 #require "AWSRequestV4.class.nut:1.0.2"
-#require "AWSCloudWatchLogs.class.nut:1.0.0"
+#require "AWSCloudWatchLogs.lib.nut:1.0.0"
 
 const AWS_CLOUD_WATCH_LOGS_ACCESS_KEY_ID = "YOUR_KEY_ID_HERE";
 const AWS_CLOUD_WATCH_LOGS_SECRET_ACCESS_KEY = "YOUR_KEY_HERE";
@@ -52,13 +52,15 @@ Parameter      	 	    |       Type	    | Required	| Description
 logGroupName			| String			| Yes		| The name of the log group you are creating
 tags					| table				| No		| The key-value pairs to use for the tags
 
+### Example
+
 ```squirrel
 const HTTP_RESPONSE_SUCCESS = 200;
 groupParams <- {
 	"logGroupName": "testLogGroup",
 	"tags": { "Environment" : "test"}
 }
-logs.CreateLogGroup(groupParams, function(res) {
+logs.CreateLogGroup(groupParams, function (res) {
 
 	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
 		server.log("Created a log group successfully");
@@ -86,12 +88,14 @@ Parameter      	 	    |       Type	    | Required	| Description
 logGroupName			| String			| Yes		| The name of the existing log group
 logStreamName			| String			| Yes		| The name of the log stream you are creating
 
+### Example
+
 ```squirrel
 params <- {
 	"logGroupName": "testLogGroup",
 	"logStreamName": "testLogStream"
 }
-logs.CreateLogStream(params, function(res) {
+logs.CreateLogStream(params, function (res) {
 	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
 		server.log("Created a log stream successfully");
 	}
@@ -117,11 +121,13 @@ Parameter      	 	    |       Type	    | Required	| Description
 ---------------------   | ----------------- | --------  | -----------
 logGroupName			| String			| Yes		| The name of the log group you want to delete
 
+### Example
+
 ```squirrel
 deleteParams <- {
 	"logGroupName": "testLogGroup"
 }
-logs.DeleteLogGroup(deleteParams, function(res) {
+logs.DeleteLogGroup(deleteParams, function (res) {
 
 	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
 		server.log("Deleted log group successfully");
@@ -150,12 +156,14 @@ Parameter      	 	    |       Type	    | Required	| Description
 logGroupName			| String			| Yes		| The name of the log group
 logStreamName			| String			| Yes		| The name of the log stream you are deleting from the log group
 
+### Example
+
 ```squirrel
 params <- {
 	"logGroupName": "testLogGroup",
 	"logStreamName": "testLogStream"
 }
-logs.DeleteLogStream(deleteParams, function(res) {
+logs.DeleteLogStream(deleteParams, function (res) {
 
 	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
 		server.log("Deleted log stream successfully");
@@ -164,6 +172,52 @@ logs.DeleteLogStream(deleteParams, function(res) {
 		server.log("Failed to delete log stream. error: " + http.jsondecode(res.body).message)
 	}
 });
+```
+
+
+### PutLogEvents(params, cb)
+Uploads a batch of log events to the specified log stream. For more detail please see: http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutLogEvents.html
+
+Parameter       	   |       Type     | Description
+---------------------- | -------------- | -----------
+**params** 			   | Table          | Table of parameters (See API Reference)
+**cb**                 | Function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter      	 	    |       Type	    | Required	| Description
+---------------------   | ----------------- | --------  | -----------
+logEvents				| Array of Tables 	| Yes		| The log events. Each table must contain a message of type String and a timestamp of type String (milliseconds passed  Jan 1, 1970 00:00:00 UTC).
+logGroupName			| String			| Yes		| The name of the log group
+logStreamName			| String			| Yes		| The name of the log stream
+sequenceToken			| No				| No		| The sequence token
+
+### Example
+
+```squirrel
+d <- date(time());
+msecStr <- format("%06d", d.usec).slice(0,3);
+t <- format("%d%s", d.time, msecStr);
+
+
+local putLogParams = {
+	"logGroupName": "testLogGroup",
+	"logStreamName": "testLogStream",
+	"logEvents": [{
+		"message": "log",
+		"timestamp": t
+	}]
+}
+
+logs.PutLogEvents(putLogParams, function(res) {
+
+	if (res.statuscode) {
+		server.log("successfully put a log in a stream");
+	}
+	else {
+		server.log("failed to put a log in a stream");
+	}
+})
 ```
 
 

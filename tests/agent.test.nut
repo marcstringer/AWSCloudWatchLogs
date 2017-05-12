@@ -1,7 +1,8 @@
 // Your AWS keys here
-const AWS_CLOUD_WATCH_LOGS_ACCESS_KEY_ID = "YOUR_KEY_ID_HERE";
-const AWS_CLOUD_WATCH_LOGS_SECRET_ACCESS_KEY = "YOUR_KEY_HERE";
-const AWS_CLOUD_WATCH_LOGS_REGION = "YOUR_REGION_HERE";
+// const AWS_CLOUD_WATCH_LOGS_ACCESS_KEY_ID = "YOUR_KEY_ID_HERE";
+// const AWS_CLOUD_WATCH_LOGS_SECRET_ACCESS_KEY = "YOUR_KEY_HERE";
+// const AWS_CLOUD_WATCH_LOGS_REGION = "YOUR_REGION_HERE";
+
 
 // http status codes
 const AWS_TEST_HTTP_RESPONSE_SUCCESS = 200;
@@ -15,7 +16,7 @@ const AWS_ERROR_EXISTING_LOG_GROUP = "The specified log group already exists";
 const AWS_ERROR_EXISTING_LOG_STREAM = "The specified log stream already exists";
 const AWS_ERROR_NO_LOG_GROUP = "The specified log group does not exist.";
 const AWS_ERROR_NO_LOG_STREAM = "The specified log stream does not exist.";
-
+const AWS_ERROR_OLD_TIMESTAMP = 1;
 
 
 class CloudWatchLogsTest extends ImpTestCase {
@@ -301,6 +302,153 @@ class CloudWatchLogsTest extends ImpTestCase {
             }.bindenv(this));
         }.bindenv(this));
 
+    }
+
+
+
+    // test that a single log event can be successfully put into a stream
+    // use the log group from setup and create a specific log stream for the test
+    function testPutLogEvent() {
+
+        local d = date(time());
+        local msecStr = format("%06d", d.usec).slice(0,3);
+        local t = format("%d%s", d.time, msecStr);
+
+        local streamParams = {
+            "logGroupName": "testLogGroup",
+            "logStreamName": "testPutLogStream"
+        }
+
+        local putLogParams = {
+            "logGroupName": "testLogGroup",
+            "logStreamName": "testPutLogStream",
+            "logEvents": [{
+                "message": "stringasdfasdf",
+                "timestamp": t
+            }]
+        }
+
+        return Promise(function(resolve, reject) {
+
+            // creates a log stream for the log group from *setup()*
+            _logs.CreateLogStream(streamParams, function(res) {
+
+                if (res.statuscode == AWS_TEST_HTTP_RESPONSE_SUCCESS) {
+                    _logs.PutLogEvents(putLogParams, function(res) {
+
+                        try {
+                            this.assertTrue(res.statuscode == AWS_TEST_HTTP_RESPONSE_SUCCESS, res.statuscode);
+                            resolve();
+                        } catch (e) {
+                            reject(e);
+                        }
+
+                    }.bindenv(this));
+                } else {
+                    reject();
+                }
+
+            }.bindenv(this));
+        }.bindenv(this));
+    }
+
+
+
+    // test that a single log event will fail if we input it as seconds and not miliseconds
+    // use the log group from setup and create a specific log stream for the test
+    function testFailPutLogEvent() {
+
+        local d = date(time());
+        local t = format("%d", d.time);
+
+        local streamParams = {
+            "logGroupName": "testLogGroup",
+            "logStreamName": "testFailLogStream"
+        }
+
+        local putLogParams = {
+            "logGroupName": "testLogGroup",
+            "logStreamName": "testFailLogStream",
+            "logEvents": [{
+                "message": "stringasdfasdf",
+                "timestamp": t
+            }]
+        }
+
+        return Promise(function(resolve, reject) {
+
+            // creates a log stream for the log group from *setup()*
+            _logs.CreateLogStream(streamParams, function(res) {
+
+                if (res.statuscode == AWS_TEST_HTTP_RESPONSE_SUCCESS) {
+                    _logs.PutLogEvents(putLogParams, function(res) {
+
+                        try {
+                            this.assertTrue(res.statuscode == AWS_TEST_HTTP_RESPONSE_SUCCESS, res.statuscode);
+                            this.assertTrue(http.jsondecode(res.body).rejectedLogEventsInfo.tooOldLogEventEndIndex == AWS_ERROR_OLD_TIMESTAMP, http.jsondecode(res.body).rejectedLogEventsInfo.tooOldLogEventEndIndex);
+                            resolve();
+                        } catch (e) {
+                            reject(e);
+                        }
+
+                    }.bindenv(this));
+                } else {
+                    reject();
+                }
+
+            }.bindenv(this));
+        }.bindenv(this));
+    }
+
+
+
+    // test that a single log event can be successfully put into a stream
+    // use the log group from setup and create a specific log stream for the test
+    function testPutLogEventMultiple() {
+
+        local d = date(time());
+        local msecStr = format("%06d", d.usec).slice(0,3);
+        local t = format("%d%s", d.time, msecStr);
+
+        local streamParams = {
+            "logGroupName": "testLogGroup",
+            "logStreamName": "testPutLogMultStream"
+        }
+
+        local putLogParams = {
+            "logGroupName": "testLogGroup",
+            "logStreamName": "testPutLogMultStream",
+            "logEvents": [{
+                "message": "string1asdfasdf",
+                "timestamp": t
+            }, {
+                "message": "stringasfasf2",
+                "timestamp": t
+            }]
+        }
+
+        return Promise(function(resolve, reject) {
+
+            // creates a log stream for the log group from *setup()*
+            _logs.CreateLogStream(streamParams, function(res) {
+
+                if (res.statuscode == AWS_TEST_HTTP_RESPONSE_SUCCESS) {
+                    _logs.PutLogEvents(putLogParams, function(res) {
+
+                        try {
+                            this.assertTrue(res.statuscode == AWS_TEST_HTTP_RESPONSE_SUCCESS, res.statuscode);
+                            resolve();
+                        } catch (e) {
+                            reject(e);
+                        }
+
+                    }.bindenv(this));
+                } else {
+                    reject();
+                }
+
+            }.bindenv(this));
+        }.bindenv(this));
     }
 
 
