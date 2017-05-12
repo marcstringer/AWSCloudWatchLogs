@@ -3,7 +3,6 @@
 // const AWS_CLOUD_WATCH_LOGS_SECRET_ACCESS_KEY = "YOUR_KEY_HERE";
 // const AWS_CLOUD_WATCH_LOGS_REGION = "YOUR_REGION_HERE";
 
-
 // http status codes
 const AWS_TEST_HTTP_RESPONSE_SUCCESS = 200;
 const AWS_TEST_HTTP_RESPONSE_SUCCESS_UPPER_BOUND = 300;
@@ -310,10 +309,9 @@ class CloudWatchLogsTest extends ImpTestCase {
     // use the log group from setup and create a specific log stream for the test
     function testPutLogEvent() {
 
-        local d = date(time());
+        local d = date();
         local msecStr = format("%06d", d.usec).slice(0,3);
-        local t = format("%d%s", d.time, msecStr);
-
+        local t = format("%d%s", time(), msecStr);
         local streamParams = {
             "logGroupName": "testLogGroup",
             "logStreamName": "testPutLogStream"
@@ -358,8 +356,7 @@ class CloudWatchLogsTest extends ImpTestCase {
     // use the log group from setup and create a specific log stream for the test
     function testFailPutLogEvent() {
 
-        local d = date(time());
-        local t = format("%d", d.time);
+        local t = format("%d", time());
 
         local streamParams = {
             "logGroupName": "testLogGroup",
@@ -406,9 +403,9 @@ class CloudWatchLogsTest extends ImpTestCase {
     // use the log group from setup and create a specific log stream for the test
     function testPutLogEventMultiple() {
 
-        local d = date(time());
+        local d = date();
         local msecStr = format("%06d", d.usec).slice(0,3);
-        local t = format("%d%s", d.time, msecStr);
+        local t = format("%d%s", time(), msecStr);
 
         local streamParams = {
             "logGroupName": "testLogGroup",
