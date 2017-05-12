@@ -195,9 +195,9 @@ sequenceToken			| No				| No		| The sequence token
 ### Example
 
 ```squirrel
-d <- date(time());
+d <- date();
 msecStr <- format("%06d", d.usec).slice(0,3);
-t <- format("%d%s", d.time, msecStr);
+t <- format("%d%s", time(), msecStr);
 
 
 local putLogParams = {

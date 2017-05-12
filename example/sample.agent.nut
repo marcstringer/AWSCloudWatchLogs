@@ -26,10 +26,10 @@
 #require "AWSRequestV4.class.nut:1.0.2"
 #require "AWSCloudWatchLogs.lib.nut:1.0.0"
 
+
 // const AWS_CLOUD_WATCH_LOGS_ACCESS_KEY_ID = "YOUR_KEY_ID_HERE";
 // const AWS_CLOUD_WATCH_LOGS_SECRET_ACCESS_KEY = "YOUR_KEY_HERE";
 // const AWS_CLOUD_WATCH_LOGS_REGION = "YOUR_REGION_HERE";
-
 
 // http status codes
 const HTTP_RESPONSE_SUCCESS = 200;
@@ -57,9 +57,9 @@ deleteParams <- {
     "logGroupName": "testLogGroup"
 }
 
-d <- date(time());
+d <- date();
 msecStr <- format("%06d", d.usec).slice(0,3);
-timestamp <- format("%d%s", d.time, msecStr);
+timestamp <- format("%d%s", time(), msecStr);
 
 putLogParams <- {
     "logGroupName": "testLogGroup",
@@ -69,7 +69,7 @@ putLogParams <- {
         "timestamp": timestamp
     }]
 }
-
+server.log(timestamp);
 // run time code
 
 // create a log group
