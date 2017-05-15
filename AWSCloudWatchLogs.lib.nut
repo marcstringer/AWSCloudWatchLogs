@@ -24,7 +24,7 @@
 
 
 class AWSCloudWatchLogs {
-    static version = "1.0.0";
+    static VERSION = "1.0.0";
 
     static SERVICE = "logs";
     static TARGET_PREFIX = "Logs_20140328";
