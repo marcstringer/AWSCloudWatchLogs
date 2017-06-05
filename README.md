@@ -1,5 +1,6 @@
 # AWSCloudWatchLogs
 
+
 To add this library to your model, add the following lines to the top of your agent code:
 
 ```
@@ -9,7 +10,8 @@ To add this library to your model, add the following lines to the top of your ag
 
 **Note: [AWSRequestV4](https://github.com/electricimp/AWSRequestV4/) must be loaded.**
 
-This class can be used to perform Cloud Watch log actions.
+You can use Amazon CloudWatch Logs to monitor, store, and access your log files from Amazon Elastic Compute Cloud (Amazon EC2) instances, AWS CloudTrail, and other sources. You can then retrieve the associated log data from CloudWatch Logs.
+This class can be used to perform Cloud Watch log actions via an Electric Imp.
 
 ## Class Methods
 
@@ -38,7 +40,7 @@ logs <- AWSCloudWatchLogs(AWS_CLOUD_WATCH_LOGS_REGION, AWS_CLOUD_WATCH_LOGS_ACCE
 
 
 ### CreateLogGroup(params, cb)
-Creates a log group with the specified name. For more detail please see: http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateLogGroup.html
+Creates a log group with the specified name. For more detail please see:[here](http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateLogGroup.html)
 
 Parameter       	   |       Type     | Description
 ---------------------- | -------------- | -----------
@@ -53,28 +55,28 @@ logGroupName			| String			| Yes		| The name of the log group you are creating
 tags					| table				| No		| The key-value pairs to use for the tags
 
 ### Example
-
+<a id="ida"></a>
 ```squirrel
 const HTTP_RESPONSE_SUCCESS = 200;
 groupParams <- {
-	"logGroupName": "testLogGroup",
-	"tags": { "Environment" : "test"}
+    "logGroupName": "testLogGroup",
+    "tags": { "Environment" : "test"}
 }
 logs.CreateLogGroup(groupParams, function (res) {
 
-	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
-		server.log("Created a log group successfully");
-	}
-	else {
-		server.log("Failed to create log group. error: " + http.jsondecode(res.body).message);
-	}
+    if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
+        server.log("Created a log group successfully");
+    }
+    else {
+        server.log("Failed to create log group. error: " + http.jsondecode(res.body).message);
+    }
 });
 ```
 
 
 
 ### CreateLogStream(params, cb)
-Creates a log stream for the specified log group. For more detail please see: http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateLogStream.html
+Creates a log stream for the specified log group. For more detail please see: [here](http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateLogStream.html)
 
 Parameter       	   |       Type     | Description
 ---------------------- | -------------- | -----------
@@ -89,26 +91,27 @@ logGroupName			| String			| Yes		| The name of the existing log group
 logStreamName			| String			| Yes		| The name of the log stream you are creating
 
 ### Example
-
+Creates a log stream for the log group created in the CreateLogGroup [example](#ida)
+<a id="idb"></a>
 ```squirrel
 params <- {
-	"logGroupName": "testLogGroup",
-	"logStreamName": "testLogStream"
+    "logGroupName": "testLogGroup",
+    "logStreamName": "testLogStream"
 }
 logs.CreateLogStream(params, function (res) {
-	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
-		server.log("Created a log stream successfully");
-	}
-	else {
-		server.log("Failed to create log stream. error: " + http.jsondecode(res.body).message);
-	}
+    if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
+        server.log("Created a log stream successfully");
+    }
+    else {
+        server.log("Failed to create log stream. error: " + http.jsondecode(res.body).message);
+    }
 });
 ```
 
 
 
 ### DeleteLogGroup(params, cb)
-Creates a log group with the specified name. For more detail please see: http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DeleteLogGroup.html
+Deletes a log group with the specified name. For more detail please see: [here](http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DeleteLogGroup.html)
 
 Parameter       	   |       Type     | Description
 ---------------------- | -------------- | -----------
@@ -122,19 +125,19 @@ Parameter      	 	    |       Type	    | Required	| Description
 logGroupName			| String			| Yes		| The name of the log group you want to delete
 
 ### Example
-
+Deletes the log group created in the CreateLogGroup [example](#ida)
 ```squirrel
 deleteParams <- {
-	"logGroupName": "testLogGroup"
+    "logGroupName": "testLogGroup"
 }
 logs.DeleteLogGroup(deleteParams, function (res) {
 
-	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
-		server.log("Deleted log group successfully");
-	}
-	else {
-		server.log("Failed to delete log group. error: " + http.jsondecode(res.body).message)
-	}
+    if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
+        server.log("Deleted log group successfully");
+    }
+    else {
+        server.log("Failed to delete log group. error: " + http.jsondecode(res.body).message)
+    }
 });
 
 ```
@@ -142,7 +145,7 @@ logs.DeleteLogGroup(deleteParams, function (res) {
 
 
 ### DeleteLogStream(params, cb)
-Deletes the specified log stream and permanently deletes all the archived log events associated with the log stream. For more detail please see: http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DeleteLogStream.html
+Deletes the specified log stream and permanently deletes all the archived log events associated with the log stream. For more detail please see: [here](http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DeleteLogStream.html)
 
 Parameter       	   |       Type     | Description
 ---------------------- | -------------- | -----------
@@ -157,26 +160,26 @@ logGroupName			| String			| Yes		| The name of the log group
 logStreamName			| String			| Yes		| The name of the log stream you are deleting from the log group
 
 ### Example
-
+Deletes the log stream created in the CreateLogStream [example](#idb)
 ```squirrel
 params <- {
-	"logGroupName": "testLogGroup",
-	"logStreamName": "testLogStream"
+    "logGroupName": "testLogGroup",
+    "logStreamName": "testLogStream"
 }
 logs.DeleteLogStream(deleteParams, function (res) {
 
-	if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
-		server.log("Deleted log stream successfully");
-	}
-	else {
-		server.log("Failed to delete log stream. error: " + http.jsondecode(res.body).message)
-	}
+    if(res.statuscode == HTTP_RESPONSE_SUCCESS) {
+        server.log("Deleted log stream successfully");
+    }
+    else {
+        server.log("Failed to delete log stream. error: " + http.jsondecode(res.body).message)
+    }
 });
 ```
 
 
 ### PutLogEvents(params, cb)
-Uploads a batch of log events to the specified log stream. For more detail please see: http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutLogEvents.html
+Uploads a batch of log events to the specified log stream. For more detail please see: [here](http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutLogEvents.html)
 
 Parameter       	   |       Type     | Description
 ---------------------- | -------------- | -----------
@@ -193,7 +196,7 @@ logStreamName			| String			| Yes		| The name of the log stream
 sequenceToken			| No				| No		| The sequence token
 
 ### Example
-
+puts logs in the log stream created in the CreateLogStream [example](#idb)
 ```squirrel
 d <- date();
 msecStr <- format("%06d", d.usec).slice(0,3);
@@ -201,22 +204,22 @@ t <- format("%d%s", time(), msecStr);
 
 
 local putLogParams = {
-	"logGroupName": "testLogGroup",
-	"logStreamName": "testLogStream",
-	"logEvents": [{
-		"message": "log",
-		"timestamp": t
-	}]
+    "logGroupName": "testLogGroup",
+    "logStreamName": "testLogStream",
+    "logEvents": [{
+    "message": "log",
+    "timestamp": t
+    }]
 }
 
 logs.PutLogEvents(putLogParams, function(res) {
 
-	if (res.statuscode) {
-		server.log("successfully put a log in a stream");
-	}
-	else {
-		server.log("failed to put a log in a stream");
-	}
+    if (res.statuscode) {
+        server.log("successfully put a log in a stream");
+    }
+    else {
+        server.log("failed to put a log in a stream");
+    }
 })
 ```
 

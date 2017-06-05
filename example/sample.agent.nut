@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright 2017 Mystic Pants PTY LTD
+// Copyright 2017 Electric Imp
 //
 // SPDX-License-Identifier: MIT
 //

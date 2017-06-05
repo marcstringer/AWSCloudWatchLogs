@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright 2017 Mystic Pants PTY LTD
+// Copyright 2017 Electric Imp
 //
 // SPDX-License-Identifier: MIT
 //
@@ -45,8 +45,8 @@ const AWS_ERROR_OLD_TIMESTAMP = 1;
 
 class CloudWatchLogsTest extends ImpTestCase {
 
+    // instantiated CloudWatchLogs class
     _logs = null;
-
 
 
     // initialise the class

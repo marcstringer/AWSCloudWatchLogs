@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright 2017 Mystic Pants PTY LTD
+// Copyright 2017 Electric Imp
 //
 // SPDX-License-Identifier: MIT
 //
@@ -24,19 +24,20 @@
 
 
 class AWSCloudWatchLogs {
-    static VERSION = "1.0.0";
 
+    static VERSION = "1.0.0";
     static SERVICE = "logs";
     static TARGET_PREFIX = "Logs_20140328";
 
     _awsRequest = null;
 
 
-    // --------------------------------------------------------------------------
-    // @param {string} region
-    // @param {string} accessKeyId
-    // @param {string} secretAccessKey
-    // --------------------------------------------------------------------------
+
+
+        // 	Parameters:
+        //	 region				AWS region
+        //   accessKeyId		AWS access key Id
+        //   secretAccessKey    AWS secret access key
     constructor(region, accessKeyId, secretAccessKey) {
         if ("AWSRequestV4" in getroottable()) {
             _awsRequest = AWSRequestV4(SERVICE, region, accessKeyId, secretAccessKey);
@@ -47,10 +48,13 @@ class AWSCloudWatchLogs {
 
 
 
-    // --------------------------------------------------------------------------
-    // @param {table} params
-    // @param {function} cb
-    // --------------------------------------------------------------------------
+
+    //	Creates a log stream for the specified log group
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //						from aws
     function CreateLogStream(params, cb) {
 
         local headers = {
@@ -62,10 +66,13 @@ class AWSCloudWatchLogs {
 
 
 
-    // --------------------------------------------------------------------------
-    // @param {table} params
-    // @param {function} cb
-    // --------------------------------------------------------------------------
+
+    //  Creates a log group with the specified name
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //						from aws
     function CreateLogGroup(params, cb) {
 
         local headers = {
@@ -77,10 +84,13 @@ class AWSCloudWatchLogs {
 
 
 
-    // --------------------------------------------------------------------------
-    // @param {table} params
-    // @param {function} cb
-    // --------------------------------------------------------------------------
+
+    //	Deletes a log group with the specified name
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //						from aws
     function DeleteLogGroup(params, cb) {
 
         local headers = {
@@ -92,10 +102,14 @@ class AWSCloudWatchLogs {
 
 
 
-    // --------------------------------------------------------------------------
-    // @param {table} params
-    // @param {function} cb
-    // --------------------------------------------------------------------------
+
+    //  Deletes the specified log stream and permanently deletes all the
+    //   archived log events associated with the log stream
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //						from aws
     function DeleteLogStream(params, cb) {
 
         local headers = {
@@ -107,10 +121,13 @@ class AWSCloudWatchLogs {
 
 
 
-    // --------------------------------------------------------------------------
-    // @param {table} params
-    // @param {function} cb
-    // --------------------------------------------------------------------------
+
+    //	Uploads a batch of log events to the specified log stream
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //						from aws
     function PutLogEvents(params, cb) {
 
         local locLogEvents = params.logEvents;
