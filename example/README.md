@@ -30,7 +30,7 @@ Please ensure your AWS keys have AWS Cloud Watch logs access.
 1. Select the `IAM Manage User Access and Encryption Keys` item
 1. Select `Users` item from the menu on the left
 1. Press `Add user`
-1. Choose a user name, for example `user-calling-DynamoDB`
+1. Choose a user name, for example `user-calling-sns`
 1. Check `Programmatic access` but not anything else
 1. Press `Next: Permissions` button
 1. Press `Attach existing policies directly` icon
